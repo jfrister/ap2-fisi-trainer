@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  const baseQuestions = [...(window.AP2_TRAINER_QUESTIONS || []), ...(window.AP2_EXTRA_QUESTIONS || []), ...(window.AP2_EXPANDED_QUESTIONS || [])];
+  const baseQuestions = [...(window.AP2_TRAINER_QUESTIONS || []), ...(window.AP2_EXTRA_QUESTIONS || []), ...(window.AP2_EXPANDED_QUESTIONS || []), ...(window.AP2_SOURCE_QUESTIONS || [])];
   const state = { area: null, queue: [], position: 0, current: null, deferredInstall: null };
   const areas = {
     administration: { title: "Konzeption & Administration", description: "IT-Systeme planen, betreiben und absichern" },
