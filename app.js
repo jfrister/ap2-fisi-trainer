@@ -15,10 +15,10 @@
   const progress = () => saved("ap2-progress", {});
   const currentId = () => state.current && state.current.id;
   const performanceClass = (points, max) => {
-    const percent = max ? (points / max) * 100 : 0;
-    return percent >= 75 ? "green" : percent >= 40 ? "orange" : "red";
+    if (points >= max && max > 0) return "green";
+    return points > 0 ? "orange" : "red";
   };
-  const performanceText = { green: "🟢 Sicher", orange: "🟠 Teilweise sicher", red: "🔴 Noch üben" };
+  const performanceText = { green: "🟢 Vollständig richtig", orange: "🟠 Teilweise richtig", red: "🔴 Noch üben" };
 
   function renderTopics() {
     const all = questions();
