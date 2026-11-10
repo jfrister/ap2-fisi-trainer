@@ -126,8 +126,8 @@
     const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "ap2-trainer-meine-daten.json"; link.click(); URL.revokeObjectURL(link.href);
   }
 
+  window.AP2RevealSolution = () => evaluate(true);
   $("check-button").addEventListener("click", evaluate);
-  $("reveal-button").addEventListener("click", () => evaluate(true));
   $("next-button").addEventListener("click", next);
   $("retry-button").addEventListener("click", () => { $("feedback-card").classList.add("hidden"); $("answer-input").focus(); });
   $("back-button").addEventListener("click", () => { renderTopics(); renderMastery(); show("home-view"); });
