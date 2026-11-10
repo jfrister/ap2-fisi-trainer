@@ -6,6 +6,7 @@ Eine mobile, offlinefähige Lern-App (PWA) für die schriftliche AP2 von Fachinf
 
 - neu formulierte, katalognahe Übungsaufgaben für Konzeption & Administration, Netzwerke und WiSo
 - eigener Lernmodus **Katalog-2025-Aufgaben**: RAID, SQL, UML/BPMN, KI sowie Belegsätze
+- zusätzliche, neu formulierte Aufgaben zu weiterhin relevanten Altprüfungs-Themen wie IPv4/IPv6, DNS, VPN, Backup, Speicher, Virtualisierung, PKI, Cloud, Segmentierung und Wirtschaftlichkeit
 - Freitextantworten mit transparenter Kriterienkorrektur, Punkten und Mustererklärung
 - lokale Speicherung des Lernstands im Browser
 - JSON-Import eigener, rechtmäßig verfügbarer Aufgaben und Musterlösungen
