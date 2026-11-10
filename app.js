@@ -14,12 +14,23 @@
   const questions = () => [...baseQuestions, ...saved("ap2-custom-questions", [])];
   const progress = () => saved("ap2-progress", {});
   const currentId = () => state.current && state.current.id;
+  const performanceClass = (points, max) => {
+    const percent = max ? (points / max) * 100 : 0;
+    return percent >= 75 ? "green" : percent >= 40 ? "orange" : "red";
+  };
+  const performanceText = { green: "🟢 Sicher", orange: "🟠 Teilweise sicher", red: "🔴 Noch üben" };
 
   function renderTopics() {
     const all = questions();
     $("topic-list").innerHTML = Object.entries(areas).map(([id, area]) => {
-      const total = all.filter((question) => question.area === id).length;
-      return `<button class="topic-button" type="button" data-area="${id}"><strong>${area.title}</strong><span>${area.description}</span><span class="count-badge">${total} Aufgaben</span></button>`;
+      const topicQuestions = all.filter((question) => question.area === id);
+      const total = topicQuestions.length;
+      const flags = topicQuestions.reduce((result, question) => {
+        const status = progress()[question.id]?.status;
+        if (status) result[status] += 1;
+        return result;
+      }, { green: 0, orange: 0, red: 0 });
+      return `<button class="topic-button" type="button" data-area="${id}"><strong>${area.title}</strong><span>${area.description}</span><span class="count-badge">${total} Aufgaben</span><span class="flag-row"><b class="flag flag-green">🟢 ${flags.green}</b><b class="flag flag-orange">🟠 ${flags.orange}</b><b class="flag flag-red">🔴 ${flags.red}</b></span></button>`;
     }).join("");
     document.querySelectorAll("[data-area]").forEach((button) => button.addEventListener("click", () => start(button.dataset.area)));
   }
@@ -48,6 +59,24 @@
     openQuestion(state.queue[0]);
   }
 
+  function weightedQuestion(candidates) {
+    const items = candidates.flatMap((question) => {
+      const status = progress()[question.id]?.status;
+      const weight = status === "red" ? 6 : status === "orange" ? 3 : status === "green" ? 1 : 4;
+      return Array(weight).fill(question);
+    });
+    return items[Math.floor(Math.random() * items.length)];
+  }
+
+  function startWeaknessFirst() {
+    const candidates = questions();
+    if (!candidates.length) return;
+    state.area = "weakness";
+    state.queue = Array.from({ length: Math.max(12, candidates.length) }, () => weightedQuestion(candidates));
+    state.position = 0;
+    openQuestion(state.queue[0]);
+  }
+
   function startCatalog2025() {
     state.area = "catalog2025";
     state.queue = questions().filter((question) => question.focus2025).sort(() => Math.random() - 0.5);
@@ -57,7 +86,9 @@
 
   function openQuestion(question) {
     state.current = question;
+    const previousStatus = progress()[question.id]?.status;
     $("question-meta").textContent = `${areas[question.area]?.title || "Eigene Aufgabe"}${question.focus2025 ? " • Katalog 2025" : ""}`;
+    if (previousStatus) $("question-meta").innerHTML += `<span class="status-flag ${previousStatus}">${performanceText[previousStatus]}</span>`;
     $("question-number").textContent = `${state.position + 1} von ${state.queue.length} • ${question.points} Punkte`;
     $("question-title").textContent = question.title;
     $("question-prompt").textContent = question.prompt;
@@ -79,7 +110,8 @@
     const achieved = matches.filter((criterion) => criterion.met).length;
     const points = Math.round((achieved / matches.length) * question.points * 2) / 2;
     const percentage = Math.round((points / question.points) * 100);
-    const tone = percentage >= 75 ? "good" : percentage >= 40 ? "partial" : "low";
+    const status = performanceClass(points, question.points);
+    const tone = status === "green" ? "good" : status === "orange" ? "partial" : "low";
     const label = revealOnly ? "Lösung zum Lernen" : percentage >= 75 ? "Sehr solide" : percentage >= 40 ? "Teilweise richtig" : "Noch ausbaufähig";
     const message = revealOnly ? "Sieh dir die Kriterien, Musterlösung und Erklärung an. Beim nächsten Durchgang kannst du die Aufgabe erneut beantworten." : percentage >= 75 ? "Du deckst die wesentlichen Bewertungskriterien ab." : percentage >= 40 ? "Ein Teil der erwarteten Aspekte fehlt noch. Vergleiche deine Antwort mit der Erklärung." : "Wichtige erwartete Aspekte fehlen noch. Nutze die Musterlösung als Lernhilfe und versuche es danach erneut.";
     $("feedback-label").textContent = `${points} / ${question.points} Punkte`;
@@ -90,7 +122,7 @@
     $("solution-details").open = revealOnly;
     $("feedback-card").className = `feedback-card ${tone}`;
     const allProgress = progress();
-    allProgress[question.id] = { points, max: question.points, updatedAt: new Date().toISOString() };
+    allProgress[question.id] = { points, max: question.points, status, updatedAt: new Date().toISOString() };
     setSaved("ap2-progress", allProgress);
     renderMastery();
     $("feedback-card").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -133,7 +165,7 @@
   $("back-button").addEventListener("click", () => { renderTopics(); renderMastery(); show("home-view"); });
   $("hint-button").addEventListener("click", () => $("question-hint").classList.toggle("hidden"));
   $("nav-home").addEventListener("click", () => { renderTopics(); renderMastery(); show("home-view"); });
-  $("nav-random").addEventListener("click", () => start(null));
+  $("nav-random").addEventListener("click", startWeaknessFirst);
   $("catalog-2025-button").addEventListener("click", startCatalog2025);
   $("reset-progress").addEventListener("click", () => { if (confirm("Fortschritt wirklich zurücksetzen?")) { localStorage.removeItem("ap2-progress"); renderMastery(); } });
   $("import-file").addEventListener("change", (event) => event.target.files[0] && importQuestions(event.target.files[0]));
