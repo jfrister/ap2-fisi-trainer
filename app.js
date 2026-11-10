@@ -97,12 +97,13 @@
     $("hint-button").classList.toggle("hidden", !question.hint);
     $("answer-input").value = "";
     $("feedback-card").className = "feedback-card hidden";
-    $("feedback-label").textContent = "Lernhilfe";
-    $("feedback-title").textContent = "Musterlösung";
-    $("feedback-summary").textContent = "Vergleiche die erwarteten Kriterien mit der Musterlösung und Erklärung.";
-    $("criteria-list").innerHTML = question.criteria.map((criterion) => `<div class="criterion missed"><span class="mark">!</span><div><strong>${criterion.label}</strong><small>Erwarteter Lösungsaspekt</small></div></div>`).join("");
-    $("model-answer").textContent = question.model;
-    $("solution-details").open = true;
+    $("feedback-label").textContent = "";
+    $("feedback-title").textContent = "";
+    $("feedback-summary").textContent = "";
+    $("criteria-list").innerHTML = "";
+    $("model-answer").textContent = "";
+    $("solution-details").open = false;
+    if (window.location.hash === "#feedback-card") history.replaceState(null, "", window.location.pathname + window.location.search);
     show("quiz-view");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
