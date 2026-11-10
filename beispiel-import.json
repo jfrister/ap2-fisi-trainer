@@ -1,0 +1,17 @@
+{
+  "questions": [
+    {
+      "id": "meine-aufgabe-001",
+      "area": "administration",
+      "title": "Eigene Aufgabe",
+      "points": 4,
+      "prompt": "Hier kommt deine Aufgabenstellung hinein.",
+      "hint": "Optionaler Tipp",
+      "model": "Hier steht die Musterlösung mit einer nachvollziehbaren Erklärung.",
+      "criteria": [
+        { "label": "Erster erwarteter Aspekt", "terms": ["fachbegriff", "gleichwertiger begriff"] },
+        { "label": "Zweiter erwarteter Aspekt", "terms": ["weiterer begriff"] }
+      ]
+    }
+  ]
+}

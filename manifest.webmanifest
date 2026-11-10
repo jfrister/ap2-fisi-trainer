@@ -1,0 +1,12 @@
+{
+  "name": "AP2 FISI Trainer",
+  "short_name": "AP2 Trainer",
+  "lang": "de",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f8fc",
+  "theme_color": "#102a43",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

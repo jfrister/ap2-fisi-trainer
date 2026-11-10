@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#102a43" />
+    <meta name="description" content="Persönlicher AP2-Lerntrainer für Fachinformatiker Systemintegration." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>AP2 FISI Trainer</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">FISI • AO 2020 • Katalog 2025</p>
+          <h1>AP2 Trainer</h1>
+        </div>
+        <button id="install-button" class="icon-button hidden" type="button" aria-label="App installieren">⇩</button>
+      </header>
+
+      <section id="home-view" class="view active" aria-labelledby="home-title">
+        <div class="hero-card">
+          <p class="eyebrow">Dein Lernstand</p>
+          <h2 id="home-title"><span id="mastery-value">0</span>% sicher</h2>
+          <div class="progress-track"><span id="mastery-bar"></span></div>
+          <p id="mastery-detail" class="muted">Noch keine Antwort bewertet.</p>
+        </div>
+
+        <section class="section">
+          <div class="section-heading">
+            <h2>AP2-Bereiche</h2>
+            <button id="reset-progress" class="text-button" type="button">Fortschritt zurücksetzen</button>
+          </div>
+          <div id="topic-list" class="topic-list"></div>
+        </section>
+
+        <section class="section catalog-card">
+          <p class="eyebrow">Katalogstand: ab Sommer 2025</p>
+          <h2>Neue AP2-Schwerpunkte</h2>
+          <p>RAID und SQL liegen nun ausschließlich in AP2. Neu berücksichtigt sind außerdem UML/BPMN, KI sowie einheitliche Belegsätze. Aufgaben zu PAP und Struktogrammen werden nicht trainiert.</p>
+          <button id="catalog-2025-button" class="secondary-button" type="button">Katalog-2025-Aufgaben üben</button>
+        </section>
+
+        <section class="section compact-card">
+          <p class="eyebrow">Eigene Inhalte</p>
+          <h2>Prüfungssätze ergänzen</h2>
+          <p>Importiere eine JSON-Datei mit Fragen, Musterlösung, Punkten und Kriterien. Die Daten bleiben ausschließlich auf deinem Gerät.</p>
+          <label class="file-button" for="import-file">JSON auswählen</label>
+          <input id="import-file" type="file" accept="application/json" />
+          <button id="export-button" class="secondary-button" type="button">Meine Daten exportieren</button>
+          <p id="import-status" class="muted" role="status"></p>
+        </section>
+      </section>
+
+      <section id="quiz-view" class="view" aria-live="polite">
+        <button id="back-button" class="back-button" type="button">← Übersicht</button>
+        <div id="question-meta" class="question-meta"></div>
+        <article class="question-card">
+          <p id="question-number" class="eyebrow"></p>
+          <h2 id="question-title"></h2>
+          <div id="question-prompt" class="prompt"></div>
+          <div id="question-hint" class="hint hidden"></div>
+          <button id="hint-button" class="text-button" type="button">Tipp anzeigen</button>
+        </article>
+
+        <label class="answer-label" for="answer-input">Deine Antwort</label>
+        <textarea id="answer-input" rows="8" placeholder="Schreibe deine Lösung stichpunktartig oder in ganzen Sätzen …"></textarea>
+        <p class="input-note">Die Bewertung prüft die hinterlegten Bewertungskriterien. Fachlich gleichwertige Formulierungen können abweichen – prüfe deshalb stets auch die Erklärung.</p>
+        <button id="check-button" class="primary-button" type="button">Antwort korrigieren</button>
+
+        <section id="feedback-card" class="feedback-card hidden" aria-labelledby="feedback-title">
+          <p id="feedback-label" class="eyebrow"></p>
+          <h2 id="feedback-title"></h2>
+          <p id="feedback-summary"></p>
+          <div id="criteria-list" class="criteria-list"></div>
+          <details>
+            <summary>Musterlösung & Erklärung</summary>
+            <div id="model-answer" class="model-answer"></div>
+          </details>
+          <div class="quiz-actions">
+            <button id="retry-button" class="secondary-button" type="button">Antwort überarbeiten</button>
+            <button id="next-button" class="primary-button" type="button">Nächste Aufgabe</button>
+          </div>
+        </section>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="Bereiche">
+      <button id="nav-home" class="active" type="button">Übersicht</button>
+      <button id="nav-random" type="button">Zufallsfrage</button>
+    </nav>
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
