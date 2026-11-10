@@ -16,7 +16,7 @@
   const currentId = () => state.current && state.current.id;
   const performanceClass = (points, max) => {
     if (points >= max && max > 0) return "green";
-    return points > 0 ? "orange" : "red";
+    return max > 0 && points / max > 0.5 ? "orange" : "red";
   };
   const performanceText = { green: "🟢 Vollständig richtig", orange: "🟠 Teilweise richtig", red: "🔴 Noch üben" };
 
