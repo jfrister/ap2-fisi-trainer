@@ -69,14 +69,17 @@
         <label class="answer-label" for="answer-input">Deine Antwort</label>
         <textarea id="answer-input" rows="8" placeholder="Schreibe deine Lösung stichpunktartig oder in ganzen Sätzen …"></textarea>
         <p class="input-note">Die Bewertung prüft die hinterlegten Bewertungskriterien. Fachlich gleichwertige Formulierungen können abweichen – prüfe deshalb stets auch die Erklärung.</p>
-        <button id="check-button" class="primary-button" type="button">Antwort korrigieren</button>
+        <div class="answer-actions">
+          <button id="check-button" class="primary-button" type="button">Antwort korrigieren</button>
+          <button id="reveal-button" class="secondary-button reveal-button" type="button">Ich weiß es nicht – Lösung zeigen</button>
+        </div>
 
         <section id="feedback-card" class="feedback-card hidden" aria-labelledby="feedback-title">
           <p id="feedback-label" class="eyebrow"></p>
           <h2 id="feedback-title"></h2>
           <p id="feedback-summary"></p>
           <div id="criteria-list" class="criteria-list"></div>
-          <details>
+          <details id="solution-details">
             <summary>Musterlösung & Erklärung</summary>
             <div id="model-answer" class="model-answer"></div>
           </details>

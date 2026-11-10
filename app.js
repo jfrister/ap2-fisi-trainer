@@ -66,26 +66,28 @@
     $("hint-button").classList.toggle("hidden", !question.hint);
     $("answer-input").value = "";
     $("feedback-card").className = "feedback-card hidden";
+    $("solution-details").open = false;
     show("quiz-view");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function evaluate() {
+  function evaluate(revealOnly = false) {
     const question = state.current;
     const answer = normalize($("answer-input").value.trim());
-    if (!answer) { $("answer-input").focus(); return; }
-    const matches = question.criteria.map((criterion) => ({ ...criterion, met: criterion.terms.some((term) => answer.includes(normalize(term))) }));
+    if (!answer && !revealOnly) { $("answer-input").focus(); return; }
+    const matches = question.criteria.map((criterion) => ({ ...criterion, met: !revealOnly && criterion.terms.some((term) => answer.includes(normalize(term))) }));
     const achieved = matches.filter((criterion) => criterion.met).length;
     const points = Math.round((achieved / matches.length) * question.points * 2) / 2;
     const percentage = Math.round((points / question.points) * 100);
     const tone = percentage >= 75 ? "good" : percentage >= 40 ? "partial" : "low";
-    const label = percentage >= 75 ? "Sehr solide" : percentage >= 40 ? "Teilweise richtig" : "Noch ausbaufähig";
-    const message = percentage >= 75 ? "Du deckst die wesentlichen Bewertungskriterien ab." : percentage >= 40 ? "Ein Teil der erwarteten Aspekte fehlt noch. Vergleiche deine Antwort mit der Erklärung." : "Wichtige erwartete Aspekte fehlen noch. Nutze die Musterlösung als Lernhilfe und versuche es danach erneut.";
+    const label = revealOnly ? "Lösung zum Lernen" : percentage >= 75 ? "Sehr solide" : percentage >= 40 ? "Teilweise richtig" : "Noch ausbaufähig";
+    const message = revealOnly ? "Sieh dir die Kriterien, Musterlösung und Erklärung an. Beim nächsten Durchgang kannst du die Aufgabe erneut beantworten." : percentage >= 75 ? "Du deckst die wesentlichen Bewertungskriterien ab." : percentage >= 40 ? "Ein Teil der erwarteten Aspekte fehlt noch. Vergleiche deine Antwort mit der Erklärung." : "Wichtige erwartete Aspekte fehlen noch. Nutze die Musterlösung als Lernhilfe und versuche es danach erneut.";
     $("feedback-label").textContent = `${points} / ${question.points} Punkte`;
     $("feedback-title").textContent = label;
     $("feedback-summary").textContent = message;
     $("criteria-list").innerHTML = matches.map((criterion) => `<div class="criterion ${criterion.met ? "met" : "missed"}"><span class="mark">${criterion.met ? "✓" : "!"}</span><div><strong>${criterion.label}</strong><small>${criterion.met ? "In deiner Antwort erkannt" : "In deiner Antwort nicht erkannt"}</small></div></div>`).join("");
     $("model-answer").textContent = question.model;
+    $("solution-details").open = revealOnly;
     $("feedback-card").className = `feedback-card ${tone}`;
     const allProgress = progress();
     allProgress[question.id] = { points, max: question.points, updatedAt: new Date().toISOString() };
@@ -125,6 +127,7 @@
   }
 
   $("check-button").addEventListener("click", evaluate);
+  $("reveal-button").addEventListener("click", () => evaluate(true));
   $("next-button").addEventListener("click", next);
   $("retry-button").addEventListener("click", () => { $("feedback-card").classList.add("hidden"); $("answer-input").focus(); });
   $("back-button").addEventListener("click", () => { renderTopics(); renderMastery(); show("home-view"); });
